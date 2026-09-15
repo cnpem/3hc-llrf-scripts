@@ -4,6 +4,7 @@ import sys
 import os
 import matplotlib.pyplot as plt
 import numpy as np
+from prettytable import PrettyTable
 from scipy import signal
 
 # ============================================================
@@ -90,6 +91,18 @@ for fn in acquisition_filenames:
 if not datasets:
     print(f"Error: No valid data found for Channel {channel_to_plot} in the provided files.")
     sys.exit(1)
+
+# ============================================================
+# Offset and AC RMS values
+# ============================================================
+table = PrettyTable()
+table.field_names = ["Filename", "Offset [mV]", "AC RMS [mV]"]
+
+for samples, label in zip(datasets, labels):
+    offset, rms = np.mean(samples), np.std(samples)
+    table.add_row([label, offset, rms])
+
+print(table)
 
 # ============================================================
 # 1. Noise Time Decourse
